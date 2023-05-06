@@ -1,4 +1,4 @@
-package br.com.juwer.springauth;
+package br.com.juwer.springauth.core;
 
 
 import org.springframework.context.annotation.Bean;
@@ -17,19 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("bruno")
-                .password(this.passwordEncoder().encode("123456"))
-                .roles("ADMIN")
-                .and()
-                .withUser("Joao")
-                .password(this.passwordEncoder().encode("123456"))
-                .roles("ADMIN");
-    }
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -39,11 +26,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected AuthenticationManager authenticationManager() throws Exception {
         return super.authenticationManager();
-    }
-
-    @Bean
-    @Override
-    protected UserDetailsService userDetailsService() {
-        return super.userDetailsService();
     }
 }
