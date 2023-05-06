@@ -1,4 +1,4 @@
-package br.com.juwer.springauth;
+package br.com.juwer.springauth.core;
 
 
 import lombok.Getter;

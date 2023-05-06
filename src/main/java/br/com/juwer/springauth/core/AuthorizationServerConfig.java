@@ -1,4 +1,4 @@
-package br.com.juwer.springauth;
+package br.com.juwer.springauth.core;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -33,10 +33,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private JwtKeyStoreProperties jwtKeyStoreProperties;
 
     @Autowired
-    private JwtKeyStoreProperties jwtKeyStoreProperties;
+    private JpaUserDetailService jpaUserDetailService;
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
@@ -80,7 +80,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints
             .authenticationManager(authenticationManager)
-            .userDetailsService(userDetailsService)
+            .userDetailsService(jpaUserDetailService)
             .reuseRefreshTokens(false)
             .accessTokenConverter(jwtAccessTokenConverter())
             .approvalStore(approvalStore(endpoints.getTokenStore()))
