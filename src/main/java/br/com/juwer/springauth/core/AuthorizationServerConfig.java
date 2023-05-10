@@ -21,6 +21,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
+import javax.sql.DataSource;
 import java.util.Arrays;
 
 @Configuration
@@ -39,42 +40,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Autowired
     private JpaUserDetailService jpaUserDetailService;
 
+    @Autowired
+    private DataSource dataSource;
+
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.inMemory()
-            // Password Credentials
-                .withClient("algafood-web")
-                .secret(passwordEncoder.encode("web123"))
-                .authorizedGrantTypes("password", "refresh_token")
-                .scopes("WRITE", "READ")
-                .accessTokenValiditySeconds(60 * 60 * 6) // seis horas (padrão é 12)
-                .refreshTokenValiditySeconds(43200 * 2) // 24 horas
-
-            //Authorization Code Grant Type PKCE
-            .and()
-                .withClient("food-analytics")
-                .secret(passwordEncoder.encode(""))
-                .authorizedGrantTypes("authorization_code")
-                .scopes("WRITE", "READ")
-                .redirectUris("http://localhost:4200")
-
-            // Client Credentials
-            .and()
-                .withClient("backend2")
-                .secret(passwordEncoder.encode("123"))
-                .authorizedGrantTypes("client_credentials")
-                .scopes("WRITE", "READ")
-
-            // Implicit Grant
-            .and()
-                .withClient("webadmin")
-                .authorizedGrantTypes("implicit")
-                .scopes("WRITE", "READ")
-                .redirectUris("http://localhost:4200")
-
-            .and()
-                .withClient("check_token")
-                .secret(passwordEncoder.encode("check123"));
+        clients.jdbc(dataSource);
     }
 
     @Override
